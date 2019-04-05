@@ -1,0 +1,18 @@
+_includes:
+  - "params_for_model.yaml"
+
+# These are for working with the ERE data set.
+# ere_xml_file_list: "%project_root%/ere_xml_file_list.txt"
+# source_file_list: "%project_root%/source_file_list.txt"
+
+# event_type: "conflict.attack"
+event_type: "personnel.start-position"
+data_split_strategy: "single_split"
+training_ratio: 0.9
+dataset_type: "ACE"
+ace_base_path: "%project_root%/corpora/ace_2005_td_v7_LDC2006T06/data/English"
+# The `.sgm` and `.apf.xml` extensions are automatically added for each entry.
+# ace_file_list: "%project_root%/test_ace_filelist.txt"
+# ace_file_list: "%project_root%/ACE_filelist_train.txt"
+ace_file_list: "%project_root%/params/train_shuffle_40.txt"
+serialized_model_path: "%project_root%/models/trigger_predictor.model"
