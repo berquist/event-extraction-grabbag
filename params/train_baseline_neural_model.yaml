@@ -7,7 +7,7 @@ data_split_strategy: "single_split"
 training_ratio: 0.9
 dataset_type: "ACE"
 ace_base_path: "%project_root%/corpora/ace_2005_td_v7_LDC2006T06/data/English"
-ace_file_list: "%project_root%/params/train_shuffle_40.txt"
-# serialized_model_path: "%project_root%/models/trigger_predictor.model"
+ace_file_list: "%project_root%/params/train_shuffle_5.txt"
+serialized_model_path: "%project_root%/models/trigger_predictor_keras.model"
 bert_trained_model_dir: "%project_root%/models/bert/uncased_L-12_H-768_A-12"
 bert_do_lower_case: true
