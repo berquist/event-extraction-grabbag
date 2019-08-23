@@ -1,0 +1,5 @@
+nw/timex2norm/NYT_ENG_20030602.0074
+bc/timex2norm/CNN_IP_20030407.1600.05
+un/timex2norm/soc.culture.hmong_20050210.1130
+wl/timex2norm/MARKETVIEW_20050214.2115
+bn/timex2norm/CNNHL_ENG_20030411_230640.38

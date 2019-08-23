@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
 
-python -m gaia_event_extraction.drivers.train_baseline_neural_model \
-       train_baseline_model.yaml
+set -euo pipefail
+
+SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+python -m gaia_event_extraction.model_trainers.train_baseline_neural_model \
+       "${SCRIPTDIR}"/train_baseline_neural_model.yaml
