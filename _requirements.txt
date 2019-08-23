@@ -1,0 +1,7 @@
+tqdm
+
+nltk==3.4
+pycorenlp==0.3.0
+scikit-learn==0.20.0
+tensorflow
+keras
