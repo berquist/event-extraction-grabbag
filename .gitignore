@@ -8,6 +8,7 @@ event-extraction.code-workspace
 f8a9e04fad9df089aecc1b0419670bcf-keras_baby_rnn/
 glue_data/
 models/
+output/
 repos/
 squad_data/
 
