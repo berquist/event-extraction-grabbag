@@ -1,11 +1,14 @@
 _includes:
   - "params_for_model.yaml"
 
-serialized_input_document_list: "%project_root%/output/bert-annotated-ace-documents/list_10.txt"
+serialized_input_document_list: "%project_root%/output/bert-annotated-ace-documents/list.txt"
+# event_type_list: "%project_root%/repos/gaia-event-extraction/data/ACE_event_types.txt"
 event_type_list: "%project_root%/params/conflict_attack.txt"
 data_split_strategy: "single_split"
 training_ratio: 0.9
 serialized_model_base: "%project_root%/models/baseline_neural_trigger_predictor_single_split"
 neural_input_embedding_dim: 768
-neural_num_training_epochs: 4
+neural_num_training_epochs: 1
 neural_training_batch_size: 128
+num_tokens_at_once: 256
+mask_value: 0.0
