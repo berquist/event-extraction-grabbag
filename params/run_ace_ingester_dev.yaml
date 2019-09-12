@@ -1,0 +1,7 @@
+_includes:
+  - "params_for_model.yaml"
+
+dataset_type: "ACE"
+ace_base_path: "%project_root%/corpora/ace_2005_td_v7_LDC2006T06/data/English"
+ace_file_list: "%project_root%/repos/gaia-event-extraction/data/ACE_filelist_dev.txt"
+flexnlp_document_output_dir: "%project_root%/output/ace-documents-dev"
