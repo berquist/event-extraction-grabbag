@@ -1,11 +1,8 @@
 _includes:
   - "params_for_model.yaml"
 
-event_type_list: "%project_root%/repos/gaia-event-extraction/data/ACE_event_types.txt"
+serialized_input_document_list: "%project_root%/output/ace-documents-train/list.txt"
 data_split_strategy: "single_split"
 training_ratio: 0.9
-dataset_type: "ACE"
-ace_base_path: "%project_root%/corpora/ace_2005_td_v7_LDC2006T06/data/English"
-# The `.sgm` and `.apf.xml` extensions are automatically added for each entry.
-ace_file_list: "%project_root%/repos/gaia-event-extraction/data/ACE_filelist_train_minus_bad_file.txt"
-serialized_model_base: "%project_root%/models/trigger_models"
+event_type_list: "%project_root%/repos/gaia-event-extraction/data/ACE_event_types.txt"
+serialized_model_base: "%project_root%/models/baseline_svc_trigger_models"

@@ -10,5 +10,5 @@ serialized_model_base: "%project_root%/models/baseline_neural_trigger_predictor_
 neural_input_embedding_dim: 768
 neural_num_training_epochs: 1
 neural_training_batch_size: 128
-num_tokens_at_once: 256
+max_sentence_length: 50
 mask_value: 0.0
