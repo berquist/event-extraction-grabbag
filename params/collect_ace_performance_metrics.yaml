@@ -1,0 +1,5 @@
+_includes:
+  - "params_for_model.yaml"
+
+trained_model_base: "%project_root%/models/baseline_svc_trigger_models"
+analysis_output_dir: "%project_root%/output"

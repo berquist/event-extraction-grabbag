@@ -1,0 +1,5 @@
+_includes:
+  - "params_for_model.yaml"
+
+serialized_input_document_list: "%project_root%/output/ace-documents-train/list.txt"
+analysis_output_dir: "%project_root%/output"

@@ -1,0 +1,4 @@
+gigawordDataDirectory: /Users/berquist/projects/aida/curated-training/gigaword_eng_5/data
+indexDirectory: /Users/berquist/projects/aida/curated-training/gigaword_eng_5_indices
+inputJsonDirectory: /Users/berquist/projects/aida/curated-training/exported-data
+restoredJsonDirectory: /Users/berquist/projects/aida/curated-training/restored-data

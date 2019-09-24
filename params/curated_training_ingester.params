@@ -1,0 +1,4 @@
+root: /Users/berquist/projects/aida/curated-training/
+
+input_annotation_json_dir: "%root%/restored-data"
+annotated_flexnlp_output_dir: "%root%/annotated-flexnlp-docs"

@@ -1,0 +1,6 @@
+inceptionUrl: http://curatedtraining.isi.edu:8080
+# inceptionUsername: remote_admin
+inceptionUsername: eric_berquist
+# password is expected to be specified in an environmental variable
+inceptionPassword: %INCEPTION_PASSWORD%
+exportedAnnotationRoot: /Users/berquist/projects/aida/curated-training/exported-data
