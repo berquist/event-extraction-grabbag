@@ -3,6 +3,8 @@
 *.jsonl
 bert-tensorflow*
 corpora/
+curated-training-annotation/
+curated-training-vistanlp/
 embeddings/
 event-extraction.code-workspace
 f8a9e04fad9df089aecc1b0419670bcf-keras_baby_rnn/
