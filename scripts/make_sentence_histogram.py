@@ -1,41 +1,27 @@
-import argparse
 import logging
 from itertools import chain
-from pathlib import Path
 
-from vistautils.parameters import YAMLParametersLoader
 from flexnlp import Document
 from gaia_event_extraction.model_data_utils import SERIALIZED_INPUT_DOCUMENT_LIST
 
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+from common import get_parameters, tokens_grouped_by_sentence_fast
+
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("parameter_filename", type=Path)
-    args = parser.parse_args()
-    params = YAMLParametersLoader().load(args.parameter_filename)
 
     sns.set()
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
 
-    documents = []
-    for filename in params.path_list_from_file(SERIALIZED_INPUT_DOCUMENT_LIST):
-        with open(filename, "rb") as file:
-            logger.info("Unpickling %s", filename)
-            documents.append(Document.from_pickle_file(file))
+    params = get_parameters()
+    documents = load_serialized_documents(
+        params.path_list_from_file(SERIALIZED_INPUT_DOCUMENT_LIST)
+    )
 
-    tokens_grouped_by_sentence = [
-        [
-            [token for token in doc.tokens() if sentence.contains_span(token)]
-            # This is actually slower?
-            # doc.tokens().tokens_enclosed_by(sentence.span)
-            for sentence in doc.sentences()
-        ]
-        for doc in documents
-    ]
+    tokens_grouped_by_sentence = tokens_grouped_by_sentence_fast(documents)
     sentence_lengths = list(
         chain.from_iterable(
             [

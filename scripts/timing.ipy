@@ -1,0 +1,21 @@
+import logging
+from vistautils.logging_utils import configure_logging_from
+
+from common import *
+
+
+if __name__ == "__main__":
+    params = get_parameters()
+    configure_logging_from(params)
+    documents = load_serialized_documents(
+        params.path_list_from_file("serialized_input_document_list"),
+        logging.getLogger(),
+    )
+    # sorted_documents = sorted(documents, key=lambda doc: len(doc.tokens()))
+
+    # %timeit doc_tokens_grouped_by_sentence_slow(sorted_documents[0])
+    # %timeit doc_tokens_grouped_by_sentence_fast(sorted_documents[0])
+    # %timeit doc_tokens_grouped_by_sentence_slow(sorted_documents[-1])
+    # %timeit doc_tokens_grouped_by_sentence_fast(sorted_documents[-1])
+    # %timeit tokens_grouped_by_sentence_slow(documents)
+    # %timeit tokens_grouped_by_sentence_fast(documents)
