@@ -2,7 +2,7 @@ _includes:
   - "params_for_model.yaml"
 
 serialized_input_document_list: "%project_root%/output/bert-annotated-ace-documents/list_10.txt"
-event_type_list: "%project_root%/params/conflict_attack.txt"
+event_type_list: "%project_root%/params/txt/conflict_attack.txt"
 data_split_strategy: "single_split"
 training_ratio: 0.9
 serialized_model_base: "%project_root%/models/baseline_neural_trigger_predictor_single_split"
