@@ -1,0 +1,9 @@
+---
+_includes:
+  - "params_for_model.yaml"
+
+ace_base_path: "%project_root%/corpora/ace_2005_td_v7_LDC2006T06/data/English"
+ace_file_list: "%project_root%/repos/gaia-event-extraction/data/ACE_filelist_dev.txt"
+bert_trained_model_dir: "%project_root%/models/bert/uncased_L-12_H-768_A-12"
+bert_do_lower_case: true
+flexnlp_document_output_dir: "%project_root%/output/bert-annotated-ace-documents-dev"
