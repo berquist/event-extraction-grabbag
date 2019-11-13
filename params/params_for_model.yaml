@@ -2,3 +2,7 @@ project_root: "/Users/berquist/projects/aida/event-extraction"
 
 random_seed: 10
 num_cores: 4
+
+validate_models: False
+logging:
+  root_level: "DEBUG"
