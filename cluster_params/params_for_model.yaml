@@ -7,3 +7,7 @@ source_file_list: "%project_root%/source_file_list.txt"
 
 random_seed: 10
 num_cores: 1
+
+validate_models: False
+logging:
+  root_level: "DEBUG"
