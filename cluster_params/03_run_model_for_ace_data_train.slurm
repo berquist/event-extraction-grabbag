@@ -3,11 +3,12 @@
 #SBATCH --job-name=03_run_model_for_ace_data_train
 #SBATCH --output=03_run_model_for_ace_data_train.slurmout-%j
 #SBATCH --error=03_run_model_for_ace_data_train.slurmerr-%j
+#SBATCH --partition=oranges
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=4
-#SBATCH --gpus-per-task=0
-#SBATCH --time=0-12:00:00
+#SBATCH --cpus-per-task=1
+#SBATCH --gpus-per-task=1
+#SBATCH --time=0-72:00:00
 
 if [[ -n "${SLURM_CPUS_PER_TASK}" ]]; then
     omp_threads="${SLURM_CPUS_PER_TASK}"
