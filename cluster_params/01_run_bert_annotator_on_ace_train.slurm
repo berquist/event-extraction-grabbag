@@ -15,11 +15,14 @@ else
 fi
 export OMP_NUM_THREADS="${omp_threads}"
 
+spack_root=/nas/gaia/users/berquist/repositories/spack
+export SPACK_ROOT="${spack_root}"
+source "${SPACK_ROOT}"/share/spack/setup-env.sh
 # When using `tensorflow-gpu`, paths to CUDA and CUDNN libraries are required
 # by symbol lookup at runtime even if a GPU isn't going to be used.
-export CUDA_HOME="$(spack location -i cuda@9.0.176)"
-export CUDNN_HOME="$(spack location -i cudnn@7.3.0)"
-export LD_LIBRARY_PATH="$CUDA_HOME/lib64:$CUDNN_HOME/lib64:$LD_LIBRARY_PATH"
+spack load cuda@9.0.176
+spack load cudnn@7.6.5.32-9.0-linux-x64
+export CUDA_CACHE_DISABLE=1
 source /nas/home/berquist/opt/apps/python/miniconda3/etc/profile.d/conda.sh
 conda activate event-extraction-3.6
 conda list
