@@ -1,0 +1,12 @@
+---  # parameter file for running ACE data on already-trained models
+
+_includes:
+  - "params_for_model.yaml"
+
+dataset: test
+
+serialized_input_document_list: "%project_root%/output/bert-annotated-ace-documents-%dataset%/list.txt"
+flexnlp_document_output_dir: "%project_root%/output/bert-annotated-ace-documents-%dataset%-with-predictions"
+trigger_models_base_path: "%project_root%/models/baseline_neural_trigger_predictor_literature_split"
+trigger_featurizer_path: "%trigger_models_base_path%/featurizer.pkl"
+trigger_candidate_generator_path: "%trigger_models_base_path%/candidate_generator.pkl"

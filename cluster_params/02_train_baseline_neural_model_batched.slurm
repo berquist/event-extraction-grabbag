@@ -3,12 +3,16 @@
 #SBATCH --job-name=02_train_baseline_neural_model_batched
 #SBATCH --output=02_train_baseline_neural_model_batched.slurmout-%j
 #SBATCH --error=02_train_baseline_neural_model_batched.slurmerr-%j
-#SBATCH --partition=apples
+#SBATCH --partition=gaia
+#SBATCH --qos=gaia
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=1
 #SBATCH --gpus-per-task=1
 #SBATCH --time=0-24:00:00
+
+# can't use -u because of conda
+set -eo pipefail
 
 if [[ -n "${SLURM_CPUS_PER_TASK}" ]]; then
     omp_threads="${SLURM_CPUS_PER_TASK}"
@@ -17,9 +21,7 @@ else
 fi
 export OMP_NUM_THREADS="${omp_threads}"
 
-spack_root=/nas/gaia/users/berquist/repositories/spack
-export SPACK_ROOT="${spack_root}"
-source "${SPACK_ROOT}"/share/spack/setup-env.sh
+source /nas/gaia/users/berquist/repositories/spack/share/spack/setup-env.sh
 # When using `tensorflow-gpu`, paths to CUDA and CUDNN libraries are required
 # by symbol lookup at runtime even if a GPU isn't going to be used.
 spack load cuda@9.0.176

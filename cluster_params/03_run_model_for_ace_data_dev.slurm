@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-#SBATCH --job-name=03_run_model_for_ace_data_train
-#SBATCH --output=03_run_model_for_ace_data_train.slurmout-%j
-#SBATCH --error=03_run_model_for_ace_data_train.slurmerr-%j
+#SBATCH --job-name=03_run_model_for_ace_data_dev
+#SBATCH --output=03_run_model_for_ace_data_dev.slurmout-%j
+#SBATCH --error=03_run_model_for_ace_data_dev.slurmerr-%j
 #SBATCH --partition=gaia
 #SBATCH --qos=gaia
 #SBATCH --nodes=1
@@ -32,4 +32,4 @@ conda list
 env | sort
 
 python -m gaia_event_extraction.drivers.run_model_for_ace_data \
-       "${SLURM_SUBMIT_DIR}"/03_run_model_for_ace_data_train.yaml
+       "${SLURM_SUBMIT_DIR}"/03_run_model_for_ace_data_dev.yaml
