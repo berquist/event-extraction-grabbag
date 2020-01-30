@@ -1,0 +1,10 @@
+---  # parameter file for scoring ACE data
+
+_includes:
+  - "params_for_model.yaml"
+
+dataset: train
+
+serialized_input_document_list: "%project_root%/output/bert-annotated-ace-documents-%dataset%-with-predictions/list.txt"
+event_type_list: "%project_root%/repos/gaia-event-extraction/data/ACE_event_types.txt"
+scoring_output_dir: "%project_root%/output/bert-annotated-ace-documents-%dataset%-with-predictions"
