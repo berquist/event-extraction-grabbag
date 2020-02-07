@@ -1,0 +1,16 @@
+---
+_includes:
+  - "../params_for_model.yaml"
+
+serialized_input_document_list: "%project_root%/output/bert-annotated-ace-documents-train/list.txt"
+event_type_list: "%project_root%/repos/gaia-event-extraction/data/ACE_event_types.txt"
+data_split_strategy: "single_split"
+training_ratio: 0.9
+serialized_model_base: "%project_root%/models/tbnnam_lstm_last_ace_literature_split"
+neural_input_embedding_dim: 768
+neural_num_training_epochs: 1
+neural_training_batch_size: 128
+max_sentence_length: 50
+entity_type_list: "%project_root%/repos/gaia-event-extraction/data/OntoNotes_entity_types.txt"
+no_event_present_tag: "NA"
+not_an_entity_tag: "NA"
