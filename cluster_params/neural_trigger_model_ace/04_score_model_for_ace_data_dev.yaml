@@ -1,7 +1,7 @@
 ---  # parameter file for scoring ACE data
 
 _includes:
-  - "params_for_model.yaml"
+  - "../params_for_model.yaml"
 
 dataset: dev
 

@@ -3,8 +3,6 @@
 #SBATCH --job-name=02_train_baseline_neural_model_batched
 #SBATCH --output=02_train_baseline_neural_model_batched.slurmout-%j
 #SBATCH --error=02_train_baseline_neural_model_batched.slurmerr-%j
-#SBATCH --partition=gaia
-#SBATCH --qos=gaia
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=1

@@ -1,6 +1,6 @@
 ---
 _includes:
-  - "params_for_model.yaml"
+  - "../params_for_model.yaml"
 
 ace_base_path: "%project_root%/corpora/ace_2005_td_v7_LDC2006T06/data/English"
 ace_file_list: "%project_root%/repos/gaia-event-extraction/data/ACE_filelist_dev.txt"

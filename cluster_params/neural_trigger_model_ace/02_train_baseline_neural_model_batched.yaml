@@ -1,5 +1,5 @@
 _includes:
-  - "params_for_model.yaml"
+  - "../params_for_model.yaml"
 
 serialized_training_document_list: "%project_root%/output/bert-annotated-ace-documents-train/list.txt"
 serialized_test_document_list: "%project_root%/output/bert-annotated-ace-documents-dev/list.txt"
