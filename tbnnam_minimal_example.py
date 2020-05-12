@@ -1,4 +1,6 @@
-# import pickle
+"""
+A minimal example of TBNNAM for binary classification without attention.
+"""
 from functools import partial
 import numpy as np
 import keras
@@ -9,15 +11,16 @@ from sklearn.model_selection import train_test_split
 
 num_samples = 180
 # originally 50
-num_tokens_at_once = 14
+num_tokens_at_once = 50
 # originally 768
-embedding_dim = 42
+embedding_dim = 768
 l2_weight = 1.0e-5
 num_entity_classes = 8
 num_event_classes = 2
 dim_ent = 15
 seed = 5489
-hidden_dim = embedding_dim + dim_ent
+# hidden_dim = embedding_dim + dim_ent
+hidden_dim = 24
 MASK_VALUE_IGNORE_POSITION = 0
 beta = 1.0
 learning_rate = 0.001
@@ -97,48 +100,6 @@ model.summary()
 custom_objects = {"biased_mean_squared_error": loss_function}
 
 
-# embeddings = np.stack(
-#     tuple(
-#         training_example.item.base_form.embedding
-#         for training_example in training_examples
-#     ),
-#     axis=0,
-# )
-# _all_labels = []
-# for training_example in training_examples:
-#     if self.target_event_type in training_example.label:
-#         _all_labels.append(classification_tools.YES)
-#     else:
-#         _all_labels.append(classification_tools.NO)
-# entity_types = np.stack(
-#     tuple(
-#         training_example.item.entity_categories
-#         for training_example in training_examples
-#     ),
-#     axis=0,
-# )
-# labels = (np.array(_all_labels) == classification_tools.YES).astype(np.float32)[
-#     ..., np.newaxis
-# ]
-# event_types = np.asarray(
-#     [
-#         [
-#             self.target_event_type_category
-#             if self.target_event_type_category in training_example.item.event_categories
-#             else self.no_event_present_category
-#         ]
-#         for training_example in training_examples
-#     ],
-#     dtype=np.float32,
-# )
-# is_binary = num_event_classes == 2
-# if is_binary:
-#     event_types[event_types == self.no_event_present_category] = 0
-#     event_types[event_types == self.target_event_type_category] = 1
-# model, custom_objects = self.init_model()
-# with open(str(self.custom_objects_pickle_dir / "custom_objects.pkl"), "wb") as handle:
-#     pickle.dump(custom_objects, handle)
-
 embeddings = np.random.standard_normal(
     size=(num_samples, num_tokens_at_once, embedding_dim)
 )
@@ -149,7 +110,7 @@ entity_types = np.random.random_integers(
 event_types = np.random.random_integers(
     low=0, high=num_event_classes - 1, size=(num_samples, 1)
 )
-labels = np.random.random_integers(low=0, high=1, size=(num_samples, 1))
+labels = np.random.random_integers(low=0, high=1, size=(num_samples, 1, 1))
 res = train_test_split(
     embeddings,
     entity_types,
@@ -178,13 +139,13 @@ model.fit(
     epochs=num_training_epochs,
     batch_size=training_batch_size,
     validation_data=validation_data,
-    # callbacks=[
-    #     callbacks.TensorBoard(
-    #         log_dir=str(log_dir),
-    #         histogram_freq=1,
-    #         write_graph=True,
-    #         write_grads=True,
-    #         update_freq="batch",
-    #     )
-    # ],
+    callbacks=[
+        callbacks.TensorBoard(
+            log_dir=str(log_dir),
+            histogram_freq=1,
+            write_graph=True,
+            write_grads=True,
+            update_freq="batch",
+        )
+    ],
 )
