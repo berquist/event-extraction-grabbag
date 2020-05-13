@@ -19,8 +19,8 @@ num_entity_classes = 8
 num_event_classes = 2
 dim_ent = 15
 seed = 5489
-# hidden_dim = embedding_dim + dim_ent
-hidden_dim = 24
+lstm_dim = 24
+event_embedding_dim = 2
 MASK_VALUE_IGNORE_POSITION = 0
 beta = 1.0
 learning_rate = 0.001
@@ -70,7 +70,7 @@ entity_type_embedding = layers.Embedding(
 )(entity_type_input)
 event_type_embedding = layers.Embedding(
     num_event_classes,
-    hidden_dim,
+    event_embedding_dim,
     name="evt_emb",
     embeddings_initializer=ScaledRandomNormal(seed=seed, scale_factor=0.01),
     embeddings_regularizer=regularizers.l2(l2_weight),
@@ -78,11 +78,18 @@ event_type_embedding = layers.Embedding(
 concat = layers.concatenate([word_embedding_input, entity_type_embedding])
 mask = layers.Masking(mask_value=MASK_VALUE_IGNORE_POSITION)(concat)
 encoder = layers.LSTM(
-    hidden_dim,
+    lstm_dim,
     kernel_regularizer=regularizers.l2(l2_weight),
     bias_regularizer=regularizers.l2(l2_weight),
 )(mask)
-mult = layers.multiply([encoder, event_type_embedding])
+mult = layers.Flatten()(
+    layers.multiply(
+        [
+            layers.Reshape((-1, 1))(encoder),
+            layers.Reshape((1, -1))(layers.Flatten()(event_type_embedding)),
+        ]
+    )
+)
 sigmoid = layers.Dense(
     1,
     activation="sigmoid",
@@ -110,7 +117,7 @@ entity_types = np.random.random_integers(
 event_types = np.random.random_integers(
     low=0, high=num_event_classes - 1, size=(num_samples, 1)
 )
-labels = np.random.random_integers(low=0, high=1, size=(num_samples, 1, 1))
+labels = np.random.random_integers(low=0, high=1, size=(num_samples, 1))
 res = train_test_split(
     embeddings,
     entity_types,
