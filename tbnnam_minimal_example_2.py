@@ -9,43 +9,46 @@ import keras.backend as K
 from keras import callbacks, layers, optimizers, regularizers
 from keras.initializers import Initializer
 from sklearn.model_selection import train_test_split
+from tensorflow import set_random_seed
 
-num_samples = 180
-# originally 50
-num_tokens_at_once = 50
-# originally 768
-embedding_dim = 768
-l2_weight = 1.0e-5
-num_entity_classes = 8
-num_event_classes = 2
-dim_ent = 15
-seed = 5489
-# hidden_dim = embedding_dim + dim_ent
-hidden_dim = 24
-MASK_VALUE_IGNORE_POSITION = 0
-beta = 1.0
-learning_rate = 0.001
-num_training_epochs = 4
-log_dir = ""
+from minimal_example_common_params import (
+    num_samples,
+    num_tokens_at_once,
+    embedding_dim,
+    l2_weight,
+    num_entity_classes,
+    dim_ent,
+    seed_value,
+    hidden_dim,
+    MASK_VALUE_IGNORE_POSITION,
+    beta,
+    learning_rate,
+    num_training_epochs,
+    log_dir,
+)
+
+
+np.random.seed(seed_value)
+set_random_seed(seed_value)
 
 
 class ScaledRandomNormal(Initializer):
     def __init__(self, seed=None, scale_factor=1.0):
         self.mean = 0.0
         self.stddev = 1.0
-        seed = seed
+        self.seed = seed
         self.scale_factor = scale_factor
 
     def __call__(self, shape, dtype=None):
         return self.scale_factor * K.random_normal(
-            shape, self.mean, self.stddev, dtype=dtype, seed=seed
+            shape, self.mean, self.stddev, dtype=dtype, seed=self.seed
         )
 
     def get_config(self):
         return {
             "mean": self.mean,
             "stddev": self.stddev,
-            "seed": seed,
+            "seed": self.seed,
             "scale_factor": self.scale_factor,
         }
 
@@ -65,7 +68,7 @@ entity_type_embedding = layers.Embedding(
     num_entity_classes,
     dim_ent,
     name="ent_emb",
-    embeddings_initializer=ScaledRandomNormal(seed=seed, scale_factor=0.01),
+    embeddings_initializer=ScaledRandomNormal(seed=seed_value, scale_factor=0.01),
     embeddings_regularizer=regularizers.l2(l2_weight),
 )(entity_type_input)
 concat = layers.concatenate([word_embedding_input, entity_type_embedding])
@@ -131,7 +134,7 @@ model.fit(
     validation_data=validation_data,
     callbacks=[
         callbacks.TensorBoard(
-            log_dir=str(log_dir),
+            log_dir=str(log_dir / "m2"),
             histogram_freq=1,
             write_graph=True,
             write_grads=True,
