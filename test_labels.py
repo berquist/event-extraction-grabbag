@@ -8,9 +8,9 @@ _seed = 5489
 random.seed(_seed)
 np.random.seed(_seed)
 
-num_samples = 23
-num_event_classes = 33
-max_labels = 5
+num_samples = 27
+num_event_classes = 10
+max_labels = 3
 
 
 def make_random_labels(
@@ -29,7 +29,7 @@ def make_random_labels(
         if num_labels == 1 and np.random.randint(2):
             sample_labels = [not_a_positive_example]
         else:
-            sample_labels = random.sample(range(1, num_classes), k=num_labels)
+            sample_labels = random.sample(range(1, num_classes + 1), k=num_labels)
         all_sample_labels.append(sample_labels)
     return all_sample_labels
 
@@ -39,11 +39,11 @@ def make_categorical_labels_including_negative_example_slot(
 ) -> np.ndarray:
     """
     The 'not a positive example' label is assumed to be one of the `num_classes` and is included in
-    the output.
+    the output as an explicit class.
     """
     return np.stack(
         [
-            to_categorical(sample_labels, num_classes=num_classes).sum(axis=0)
+            to_categorical(sample_labels, num_classes=num_classes + 1).sum(axis=0)
             for sample_labels in all_sample_labels
         ]
     )
@@ -62,8 +62,10 @@ def make_categorical_labels_excluding_negative_example_slot(
     all_categorical_labels = list()
     for sample_labels in all_sample_labels:
         if sample_labels != [not_a_positive_example_value]:
+            # this "shift" doesn't work when `not_a_positive_example_value` is anything other than
+            # zero
             categorical_labels = to_categorical(
-                sample_labels, num_classes=num_classes
+                np.asarray(sample_labels) - 1, num_classes=num_classes
             ).sum(axis=0)
         else:
             categorical_labels = to_categorical([], num_classes=num_classes).sum(axis=0)
@@ -87,4 +89,7 @@ excluding = make_categorical_labels_excluding_negative_example_slot(
     num_classes=num_event_classes,
     not_a_positive_example_value=not_a_positive_example_value,
 )
-print(including - excluding)
+assert including.shape == (num_samples, num_event_classes + 1)
+assert excluding.shape == (num_samples, num_event_classes)
+print(including)
+print(excluding)
