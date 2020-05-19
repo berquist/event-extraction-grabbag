@@ -15,7 +15,7 @@ def make_random_labels(
     """
     all_sample_labels = list()
     for _ in range(num_samples):
-        num_labels = np.random.randint(low=1, high=max_labels + 1)
+        num_labels = np.random.randint(low=1, high=max_labels_per_sample + 1)
         # 50% chance that the only label is "not an event"
         if num_labels == 1 and np.random.randint(2):
             sample_labels = [0]
