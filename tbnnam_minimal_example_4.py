@@ -29,16 +29,19 @@ from minimal_example_common_params import (
 )
 
 from test_labels import (
+    biased_event_binary_crossentropy_np,
     make_random_labels,
     make_categorical_labels_including_negative_example_slot,
     make_categorical_labels_excluding_negative_example_slot,
+    round_traditional_np
 )
 
 np.random.seed(seed_value)
 set_random_seed(seed_value)
-num_training_epochs = 50
+num_training_epochs = 100
 num_event_classes = 47
 max_event_labels_per_sample = 30
+beta = 0.0
 
 
 class ScaledRandomNormal(Initializer):
@@ -68,6 +71,18 @@ def biased_mean_squared_error(
     return K.mean(K.square(y_pred - y_true) * K.square(1 + (y_true * beta)), axis=-1)
 
 
+def event_binary_crossentropy(y_true: np.ndarray, y_pred: np.ndarray):
+    return K.mean(K.mean(K.binary_crossentropy(y_true, y_pred), axis=0))
+
+
+def biased_event_binary_crossentropy(
+    y_true: np.ndarray, y_pred: np.ndarray, *, beta: float = 0.0
+):
+    return K.mean(
+        K.mean(K.binary_crossentropy(y_true, y_pred) * (1 + (y_true * beta)), axis=0)
+    )
+
+
 K.clear_session()
 word_embedding_input = layers.Input(
     shape=(num_tokens_at_once, embedding_dim), name="w_emb"
@@ -95,11 +110,11 @@ sigmoid = layers.Dense(
     name="output",
 )(encoder)
 model = keras.Model(inputs=[word_embedding_input, entity_type_input], outputs=sigmoid)
-loss_function = partial(biased_mean_squared_error, beta=beta)
-loss_function.__name__ = biased_mean_squared_error.__name__
+loss_function = partial(biased_event_binary_crossentropy, beta=beta)
+loss_function.__name__ = biased_event_binary_crossentropy.__name__
 model.compile(optimizer=optimizers.Adam(lr=learning_rate), loss=loss_function)
 model.summary()
-custom_objects = {"biased_mean_squared_error": loss_function}
+custom_objects = {loss_function.__name__: loss_function}
 
 embeddings = np.random.standard_normal(
     size=(num_samples, num_tokens_at_once, embedding_dim)
@@ -128,3 +143,14 @@ model.fit(
     epochs=num_training_epochs,
     batch_size=training_batch_size,
 )
+
+idx = 4
+embeddings_single = embeddings_train[idx][np.newaxis, ...]
+entity_types_single = entity_types_train[idx][np.newaxis, ...]
+labels_single = labels_train[idx][np.newaxis, ...]
+pred_single = model.predict([embeddings_single, entity_types_single])
+print(biased_event_binary_crossentropy_np(labels_single, pred_single, beta=beta))
+print(model.evaluate([embeddings_single, entity_types_single], labels_single))
+pred_train = model.predict([embeddings_train, entity_types_train])
+print(biased_event_binary_crossentropy_np(labels_train, pred_train, beta=beta))
+print(model.evaluate([embeddings_train, entity_types_train], labels_train))

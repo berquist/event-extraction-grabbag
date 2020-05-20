@@ -1,5 +1,6 @@
 import random
 import numpy as np
+from keras.backend.numpy_backend import binary_crossentropy
 from keras.utils import to_categorical
 from pprint import pprint
 from typing import List
@@ -106,6 +107,30 @@ def test_make_categorical_labels_excluding_negative_example_slot() -> None:
         ),
         all_categorical_labels,
     )
+
+
+def event_binary_crossentropy_np(y_true: np.ndarray, y_pred: np.ndarray):
+    return np.mean(np.mean(binary_crossentropy(y_true, y_pred), axis=0))
+
+
+def biased_event_binary_crossentropy_np(
+    y_true: np.ndarray, y_pred: np.ndarray, *, beta: float = 0.0
+):
+    return np.mean(
+        np.mean(binary_crossentropy(y_true, y_pred) * (1 + (y_true * beta)), axis=0)
+    )
+
+
+def round_traditional(val, digits=None):
+    """https://stackoverflow.com/a/38239574"""
+    return round(val + 10 ** (-len(str(val)) - 1), digits)
+
+
+round_traditional_np = np.vectorize(round_traditional)
+
+
+def make_logits(p):
+    return np.log(p / (1 - p))
 
 
 if __name__ == "__main__":
