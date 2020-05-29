@@ -142,12 +142,10 @@ if __name__ == "__main__":
     num_event_classes = 10
     max_labels = 3
 
-    not_a_positive_example_value = 0
     all_sample_labels = make_random_labels(
-        num_samples,
-        num_event_classes,
-        max_labels,
-        not_a_positive_example=not_a_positive_example_value,
+        num_samples=num_samples,
+        num_classes=num_event_classes,
+        max_labels_per_sample=max_labels,
     )
     pprint(all_sample_labels)
     including = make_categorical_labels_including_negative_example_slot(
@@ -156,7 +154,6 @@ if __name__ == "__main__":
     excluding = make_categorical_labels_excluding_negative_example_slot(
         all_sample_labels,
         num_classes=num_event_classes,
-        not_a_positive_example_value=not_a_positive_example_value,
     )
     assert including.shape == (num_samples, num_event_classes + 1)
     assert excluding.shape == (num_samples, num_event_classes)
