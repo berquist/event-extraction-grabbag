@@ -1,5 +1,6 @@
 import random
 import numpy as np
+import pytest
 from keras.backend.numpy_backend import binary_crossentropy
 from keras.utils import to_categorical
 from pprint import pprint
@@ -30,8 +31,8 @@ def make_categorical_labels_including_negative_example_slot(
     all_sample_labels: List[List[int]], *, num_classes: int
 ) -> np.ndarray:
     """
-    The negative example label, zero, is assumed to be one of the `num_classes` and is included in
-    the output as an explicit class.
+    The negative example label, zero, is assumed to *not* be one of the `num_classes`, but is
+    included in the output as an explicit class.
 
     The output has shape `[len(all_sample_labels), num_classes + 1]`.
     """
@@ -47,11 +48,12 @@ def make_categorical_labels_excluding_negative_example_slot(
     all_sample_labels: List[List[int]], *, num_classes: int
 ) -> np.ndarray:
     """
-    The negative example label, zero, is assumed to be one of the `num_classes` and is excluded from
-    the output, represented by a vector of all zeros.
+    The negative example label, zero, is assumed to *not* be one of the `num_classes` and is
+    excluded from the output, represented by a vector of all zeros.
 
     The output has shape `[len(all_sample_labels), num_classes]`. Since the negative example label
-    slot has been removed, all the categories will be shifted down by one in the result.
+    slot has been removed, all the categories will be shifted down by one in the result compared to
+    their original category.
     """
     all_categorical_labels = list()
     for sample_labels in all_sample_labels:
@@ -109,6 +111,77 @@ def test_make_categorical_labels_excluding_negative_example_slot() -> None:
     )
 
 
+def test_category_mapping_to_binary_matrix_including_negative_example_slot() -> None:
+    categories = {"not a fruit": 0, "apple": 1, "pear": 2, "banana": 3, "plum": 4}
+    text_labels = [
+        ["not a fruit"],
+        ["not a fruit"],
+        ["plum"],
+        ["apple"],
+        # this one is a mutant
+        ["apple", "plum", "pear", "banana"],
+        ["not a fruit"],
+    ]
+    categorical_labels = [
+        [categories[label] for label in sample] for sample in text_labels
+    ]
+    binary_matrix_labels = make_categorical_labels_including_negative_example_slot(
+        categorical_labels, num_classes=len(categories) - 1
+    )
+    np.testing.assert_equal(
+        binary_matrix_labels,
+        np.asarray(
+            [
+                [1, 0, 0, 0, 0],
+                [1, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1],
+                [0, 1, 0, 0, 0],
+                [0, 1, 1, 1, 1],
+                [1, 0, 0, 0, 0],
+            ]
+        ),
+    )
+
+
+def test_category_mapping_to_binary_matrix_excluding_negative_example_slot() -> None:
+    categories = {"not a fruit": 0, "apple": 1, "pear": 2, "banana": 3, "plum": 4}
+    text_labels = [
+        ["not a fruit"],
+        ["not a fruit"],
+        ["plum"],
+        ["apple"],
+        # this one is a mutant
+        ["apple", "plum", "pear", "banana"],
+        ["not a fruit"],
+    ]
+    categorical_labels = [
+        [categories[label] for label in sample] for sample in text_labels
+    ]
+    binary_matrix_labels = make_categorical_labels_excluding_negative_example_slot(
+        categorical_labels, num_classes=len(categories) - 1
+    )
+    np.testing.assert_equal(
+        binary_matrix_labels,
+        np.asarray(
+            [
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+                [0, 0, 0, 1],
+                [1, 0, 0, 0],
+                [1, 1, 1, 1],
+                [0, 0, 0, 0],
+            ]
+        ),
+    )
+
+    # What happens when you specify one too few classes?
+    with pytest.raises(IndexError) as excinfo:
+        make_categorical_labels_excluding_negative_example_slot(
+            categorical_labels, num_classes=len(categories) - 2
+        )
+    assert str(excinfo.value) == "index 3 is out of bounds for axis 1 with size 3"
+
+
 def event_binary_crossentropy_np(y_true: np.ndarray, y_pred: np.ndarray):
     return np.mean(np.mean(binary_crossentropy(y_true, y_pred), axis=0))
 
@@ -152,8 +225,7 @@ if __name__ == "__main__":
         all_sample_labels, num_classes=num_event_classes
     )
     excluding = make_categorical_labels_excluding_negative_example_slot(
-        all_sample_labels,
-        num_classes=num_event_classes,
+        all_sample_labels, num_classes=num_event_classes
     )
     assert including.shape == (num_samples, num_event_classes + 1)
     assert excluding.shape == (num_samples, num_event_classes)
