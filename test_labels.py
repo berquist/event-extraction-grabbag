@@ -51,6 +51,9 @@ def make_categorical_labels_excluding_negative_example_slot(
     The negative example label, zero, is assumed to *not* be one of the `num_classes` and is
     excluded from the output, represented by a vector of all zeros.
 
+    Worded differently, for a categorical mapping, if the mapping includes the "none" category,
+    `num_classes` should be `len(mapping) - 1`.
+
     The output has shape `[len(all_sample_labels), num_classes]`. Since the negative example label
     slot has been removed, all the categories will be shifted down by one in the result compared to
     their original category.
