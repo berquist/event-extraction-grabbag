@@ -92,6 +92,8 @@ def test_make_categorical_labels_including_negative_example_slot() -> None:
 
 def test_make_categorical_labels_excluding_negative_example_slot() -> None:
     all_sample_labels = [[1, 3, 4], [2, 4], [0], [1], [1, 5]]
+    # For a categorical mapping, if the mapping includes the "none" category, this would be
+    # `len(mapping) - 1`.
     num_classes = 5
     all_categorical_labels = np.asarray(
         [
@@ -109,6 +111,13 @@ def test_make_categorical_labels_excluding_negative_example_slot() -> None:
         ),
         all_categorical_labels,
     )
+
+    # What happens when you specify one too few classes?
+    with pytest.raises(IndexError) as excinfo:
+        make_categorical_labels_excluding_negative_example_slot(
+            all_sample_labels, num_classes=num_classes - 1
+        )
+    assert str(excinfo.value) == "index 4 is out of bounds for axis 1 with size 4"
 
 
 def test_category_mapping_to_binary_matrix_including_negative_example_slot() -> None:
