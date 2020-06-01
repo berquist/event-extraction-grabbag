@@ -1,4 +1,9 @@
 *.jsonl
+.DS_Store
+.dir-locals.el
+.envrc
+.idea/
+.vscode/
 bert-tensorflow*
 corpora/
 curated-training-annotation/
