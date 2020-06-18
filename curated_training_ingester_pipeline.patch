@@ -1,0 +1,42 @@
+diff --git a/gaia_event_extraction/ingesters/curated_training_ingester.py b/gaia_event_extraction/ingesters/curated_training_ingester.py
+index 3972c97..95d254a 100644
+--- a/gaia_event_extraction/ingesters/curated_training_ingester.py
++++ b/gaia_event_extraction/ingesters/curated_training_ingester.py
+@@ -42,29 +42,15 @@ from vistautils.span import HasSpan, Span
+ def _main(params: Parameters):
+     input_dir: Path = params.existing_directory("input_annotation_json_dir")
+     output_dir: Path = params.creatable_empty_directory("annotated_flexnlp_output_dir")
++    pipeline = Pipeline.builder().add(CuratedTrainingIngester(LdcSgmIngester())).build()
+     logging.info("Will write output to %s", output_dir)
+-    ingester = CuratedTrainingIngester(LdcSgmIngester())
+-    pipeline = Pipeline.builder().add(ingester).build()
+-    for project_dir in input_dir.iterdir():
+-        if not project_dir.is_dir():
+-            raise CuratedTrainingAnnotationException(
+-                f"Path {project_dir} is not a directory"
+-            )
+-        output_project_dir = output_dir.joinpath(project_dir.name)
+-        output_project_dir.mkdir()
+-        for json_path in project_dir.iterdir():
+-            if not json_path.is_file or json_path.suffix != ".json":
+-                raise CuratedTrainingAnnotationException(
+-                    f"Path {json_path} is not a json file"
+-                )
+-            logging.info("Processing %s", json_path)
+-            doc = pipeline.process(json_path)
+-            output_file = Path(  # no way to add extension to Path object
+-                str(output_project_dir.joinpath(json_path.stem)) + ".pickle"
+-            )
+-            with open(output_file, "wb") as f:
+-                logging.info("Writing %s", output_file)
+-                dump(doc, f)
++    json_files = input_dir.glob("**/*.json")
++    for json_file in json_files:
++        output_path = output_dir / f"{json_file.relative_to(input_dir).stem}.pickle"
++        output_path.parent.mkdir(exist_ok=True, parents=True)
++        with open(str(output_path), "wb") as f:
++            logging.info(f"Writing {output_path}")
++            dump(pipeline.process(json_file), f)
+ 
+ 
+ @attrs(frozen=True, slots=True, auto_attribs=True, kw_only=True)
